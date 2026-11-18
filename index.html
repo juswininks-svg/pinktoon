@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pinktoon Studio ✨ Kawaii Webtoon Creator</title>
+  <!-- Google Fonts: Fredoka, Quicksand, Nunito, & Comic Neue for Webtoon bubbles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,700;1,700&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sakura: {
+              50: '#FFF5F8',
+              100: '#FFF0F5',
+              200: '#FFE4E1',
+              300: '#FFC1D6',
+              400: '#FF94B8',
+              500: '#FF69B4',
+              600: '#FF1493',
+              700: '#D81B60',
+            }
+          },
+          fontFamily: {
+            display: ['Fredoka', 'Quicksand', 'sans-serif'],
+            body: ['Nunito', 'sans-serif'],
+            comic: ['"Comic Neue"', 'cursive', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Soft Kawaii Styling & Floating Decorations */
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #FFF0F5;
+      background-image:
+        radial-gradient(#FFC1D6 1.2px, transparent 1.2px),
+        radial-gradient(#FFE4E1 1.2px, #FFF0F5 1.2px);
+      background-size: 36px 36px;
+      background-position: 0 0, 18px 18px;
+      color: #5C2B42;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, .font-display {
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FFF0F5;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #FF94B8;
+      border-radius: 999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FF69B4;
+    }
+
+    /* Floating Sparkles Background */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-14px) rotate(8deg); }
+    }
+    .float-decor {
+      animation: floatSlow 5s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Kawaii Card Shadow */
+    .kawaii-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border: 2px solid #FFC1D6;
+      box-shadow: 0 8px 24px -4px rgba(255, 105, 180, 0.14);
+      border-radius: 1.5rem;
+    }
+
+    .kawaii-btn {
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .kawaii-btn:hover {
+      transform: translateY(-2px);
+    }
+    .kawaii-btn:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    /* Webtoon Speech Bubbles */
+    .bubble-speech {
+      position: relative;
+      background: #ffffff;
+      border: 2.5px solid #3A1D2C;
+      border-radius: 999px;
+      padding: 12px 20px;
+      box-shadow: 3px 4px 0px rgba(58, 29, 44, 0.15);
+    }
+    .bubble-thought {
+      position: relative;
+      background: #FFF5F8;
+      border: 2.5px dashed #FF69B4;
+      border-radius: 28px;
+      padding: 12px 20px;
+    }
+    .bubble-shout {
+      position: relative;
+      background: #FFF0F5;
+      border: 3px solid #FF1493;
+      border-radius: 12px;
+      padding: 12px 18px;
+      box-shadow: 4px 4px 0px #FF69B4;
+      transform: rotate(-1deg);
+    }
+    .bubble-narration {
+      background: linear-gradient(135deg, #FFE4E1 0%, #FFF0F5 100%);
+      border: 2px solid #FF94B8;
+      border-radius: 8px;
+      padding: 10px 16px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col relative">
+
+  <!-- Subtle Floating Background Sparkles & Hearts -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none z-0 opacity-40" aria-hidden="true">
+    <div class="float-decor absolute top-14 left-8 text-2xl" style="animation-delay: 0s;">🌸</div>
+    <div class="float-decor absolute top-32 right-12 text-xl" style="animation-delay: 1.2s;">✨</div>
+    <div class="float-decor absolute bottom-24 left-16 text-2xl" style="animation-delay: 2.1s;">💖</div>
+    <div class="float-decor absolute bottom-16 right-24 text-2xl" style="animation-delay: 0.7s;">🎀</div>
+    <div class="float-decor absolute top-1/2 left-6 text-lg" style="animation-delay: 3s;">⭐</div>
+  </div>
+
+  <!-- Toast Notification Banner -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- Top Header Bar -->
+  <header class="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b-2 border-sakura-300 px-4 py-3 shadow-sm">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-sakura-500 to-sakura-600 flex items-center justify-center text-white shadow-md shadow-sakura-300 text-xl">
+          🌸
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl sm:text-2xl font-bold text-sakura-600 tracking-tight">Pinktoon Studio</h1>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sakura-100 text-sakura-600 border border-sakura-300">Creator Hub</span>
+          </div>
+          <p id="header-series-subtitle" class="text-xs text-pink-800/70 font-semibold truncate max-w-[220px] sm:max-w-md">
+            Cherry Blossom Café & The Demon Prince
+          </p>
+        </div>
+      </div>
+
+      <!-- Save Status & Backup Controls -->
+      <div class="flex items-center gap-2 flex-wrap">
+        <span id="save-indicator" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-pink-600 bg-sakura-100 px-3 py-1.5 rounded-full border border-sakura-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Auto-saved
+        </span>
+
+        <button onclick="exportProjectJSON()" class="kawaii-btn inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-sakura-100 hover:bg-sakura-200 text-sakura-700 font-bold text-xs border border-sakura-300" title="Export JSON Backup">
+          <i data-lucide="download" class="w-4 h-4"></i>
+          <span>Export JSON</span>
+        </button>
+
+        <label class="kawaii-btn cursor-pointer inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white hover:bg-sakura-100 text-sakura-700 font-bold text-xs border border-sakura-300" title="Import JSON Backup">
+          <i data-lucide="upload" class="w-4 h-4"></i>
+          <span>Import</span>
+          <input type="file" id="import-json-input" accept=".json" class="hidden" onchange="importProjectJSON(event)" />
+        </label>
+
+        <button onclick="openResetModal()" class="kawaii-btn inline-flex items-center gap-1 px-2.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs border border-rose-200" title="Reset to Sample Series">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace Container -->
+  <div class="relative z-10 flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-5 flex flex-col lg:flex-row gap-6">
+
+    <!-- Navigation Sidebar / Mobile Horizontal Pill Bar -->
+    <nav class="lg:w-64 shrink-0">
+      <div class="kawaii-card p-2.5 lg:p-4 flex lg:flex-col gap-1.5 overflow-x-auto lg:sticky lg:top-24">
+        <button onclick="switchTab('dashboard')" data-tab="dashboard" class="nav-tab active flex items-center gap-3 px-4 py-3 rounded-2xl font-display font-semibold text-sm whitespace-nowrap transition-all">
+          <span class="text-lg">🏰</span>
+          <span>Series Dashboard</span>
+        </button>
+
+        <button onclick="switchTab('characters')" data-tab="characters" class="nav-tab flex items-center gap-3 px-4 py-3 rounded-2xl font-display font-semibold text-sm whitespace-nowrap transition-all">
+          <span class="text-lg">🎀</span>
+          <span>Character Cast</span>
+          <span id="nav-char-count" class="ml-auto text-xs px-2 py-0.5 rounded-full bg-sakura-200 text-sakura-700 font-bold">0</span>
+        </button>
+
+        <button onclick="switchTab('episodes')" data-tab="episodes" class="nav-tab flex items-center gap-3 px-4 py-3 rounded-2xl font-display font-semibold text-sm whitespace-nowrap transition-all">
+          <span class="text-lg">🗓️</span>
+          <span>Episode Board</span>
+          <span id="nav-ep-count" class="ml-auto text-xs px-2 py-0.5 rounded-full bg-sakura-200 text-sakura-700 font-bold">0</span>
+        </button>
+
+        <button onclick="switchTab('script')" data-tab="script" class="nav-tab flex items-center gap-3 px-4 py-3 rounded-2xl font-display font-semibold text-sm whitespace-nowrap transition-all">
+          <span class="text-lg">✍️</span>
+          <span>Storyline & Script</span>
+        </button>
+
+        <button onclick="switchTab('cover')" data-tab="cover" class="nav-tab flex items-center gap-3 px-4 py-3 rounded-2xl font-display font-semibold text-sm whitespace-nowrap transition-all">
+          <span class="text-lg">🎨</span>
+          <span>Cover Designer</span>
+        </button>
+
+        <!-- Cute Creator Tip Card (Desktop) -->
+        <div class="hidden lg:block mt-4 p-4 rounded-2xl bg-gradient-to-br from-sakura-100 to-sakura-200/70 border border-sakura-300">
+          <div class="flex items-center gap-2 font-display font-bold text-sakura-700 text-sm mb-1">
+            <span>✨ Webtoon Tip</span>
+          </div>
+          <p class="text-xs text-pink-900/80 leading-relaxed">
+            Vertical scroll pacing shines when you leave breathing room between emotional speech bubbles! Test yours in the <b>Live Scroll Preview</b>.
+          </p>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Dynamic Content Views -->
+    <main class="flex-1 min-w-0">
+
+      <!-- ========================================================= -->
+      <!-- TAB 1: SERIES DASHBOARD                                   -->
+      <!-- ========================================================= -->
+      <section id="tab-dashboard" class="tab-view space-y-6">
+        <!-- Hero Banner -->
+        <div class="kawaii-card p-6 sm:p-8 bg-gradient-to-r from-white via-sakura-50 to-sakura-100 relative overflow-hidden">
+          <div class="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+            <div class="space-y-2 max-w-2xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sakura-500 text-white text-xs font-extrabold tracking-wide shadow-sm">
+                <span>💖 WEBTOON SERIES BIBLE</span>
+              </div>
+              <h2 id="dash-hero-title" class="text-2xl sm:text-4xl font-bold text-pink-950">Cherry Blossom Café & The Demon Prince</h2>
+              <p id="dash-hero-tagline" class="text-sm sm:text-base text-pink-800/80 font-medium">
+                When a clumsy pastry witch accidentally summons the Underworld's sharpest critic, sugar and sparks fly!
+              </p>
+            </div>
+            <button onclick="switchTab('cover')" class="kawaii-btn shrink-0 px-5 py-3 rounded-2xl bg-gradient-to-r from-sakura-500 to-sakura-600 text-white font-display font-bold text-sm shadow-lg shadow-sakura-300 flex items-center gap-2">
+              <span>🎨 Design Cover Thumbnail</span>
+            </button>
+          </div>
+
+          <!-- Series Quick Stats Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-6 border-t border-sakura-200">
+            <div class="bg-white/90 p-4 rounded-2xl border border-sakura-200 text-center">
+              <div class="text-2xl mb-1">🎀</div>
+              <div id="stat-characters" class="text-2xl font-display font-bold text-sakura-600">0</div>
+              <div class="text-xs font-bold text-pink-800/70">Characters</div>
+            </div>
+            <div class="bg-white/90 p-4 rounded-2xl border border-sakura-200 text-center">
+              <div class="text-2xl mb-1">📚</div>
+              <div id="stat-episodes" class="text-2xl font-display font-bold text-sakura-600">0</div>
+              <div class="text-xs font-bold text-pink-800/70">Planned Episodes</div>
+            </div>
+            <div class="bg-white/90 p-4 rounded-2xl border border-sakura-200 text-center">
+              <div class="text-2xl mb-1">🖼️</div>
+              <div id="stat-panels" class="text-2xl font-display font-bold text-sakura-600">0</div>
+              <div class="text-xs font-bold text-pink-800/70">Scripted Panels</div>
+            </div>
+            <div class="bg-white/90 p-4 rounded-2xl border border-sakura-200 text-center">
+              <div class="text-2xl mb-1">🌟</div>
+              <div id="stat-published" class="text-2xl font-display font-bold text-sakura-600">0</div>
+              <div class="text-xs font-bold text-pink-800/70">Published Eps</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Editable Series Metadata Form -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 kawaii-card p-6 space-y-5">
+            <div class="flex items-center justify-between border-b border-sakura-200 pb-3">
+              <h3 class="text-lg font-bold text-pink-950 flex items-center gap-2">
+                <span>📖 Series Details & Synopsis</span>
+              </h3>
+              <span class="text-xs font-bold text-sakura-500">Edits save automatically ✨</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-pink-800 mb-1.5">Series Title</label>
+                <input type="text" id="series-title-input" oninput="updateSeriesMeta()" class="w-full px-4 py-2.5 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none font-bold text-pink-950" />
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-pink-800 mb-1.5">Creator / Pen Name</label>
+                <input type="text" id="series-author-input" oninput="updateSeriesMeta()" class="w-full px-4 py-2.5 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none font-bold text-pink-950" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-extrabold uppercase tracking-wider text-pink-800 mb-1.5">Logline / Hook</label>
+              <input type="text" id="series-tagline-input" oninput="updateSeriesMeta()" class="w-full px-4 py-2.5 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none text-sm font-semibold text-pink-950" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-extrabold uppercase tracking-wider text-pink-800 mb-1.5">Full Synopsis</label>
+              <textarea id="series-synopsis-input" rows="4" oninput="updateSeriesMeta()" class="w-full px-4 py-2.5 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none text-sm leading-relaxed text-pink-950"></textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-pink-800 mb-1.5">Target Audience</label>
+                <select id="series-audience-input" onchange="updateSeriesMeta()" class="w-full px-4 py-2.5 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none font-bold text-sm text-pink-950">
+                  <option value="Young Adult (16-24) • Shojo / Josei">Young Adult (16-24) • Shojo / Josei</option>
+                  <option value="Teen (13-17) • Sweet Romance">Teen (13-17) • Sweet Romance</option>
+                  <option value="All Ages • Cozy Slice of Life">All Ages • Cozy Slice of Life</option>
+                  <option value="New Adult (18+) • Fantasy Drama">New Adult (18+) • Fantasy Drama</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold uppercase tracking-wider text-pink-800 mb-1.5">Release Schedule</label>
+                <input type="text" id="series-schedule-input" oninput="updateSeriesMeta()" placeholder="e.g., Every Sunday & Wednesday" class="w-full px-4 py-2.5 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none font-bold text-sm text-pink-950" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Genre Tags & Story World Moodboard -->
+          <div class="kawaii-card p-6 flex flex-col justify-between space-y-6">
+            <div>
+              <h3 class="text-lg font-bold text-pink-950 border-b border-sakura-200 pb-3 mb-4">🏷️ Genre Tags</h3>
+              <p class="text-xs text-pink-800/75 mb-3">Toggle up to 4 genres that best describe your Webtoon:</p>
+              <div id="genre-tag-selector" class="flex flex-wrap gap-2">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-sakura-50 border-2 border-dashed border-sakura-300 space-y-3">
+              <h4 class="font-display font-bold text-sakura-700 text-sm flex items-center gap-1.5">
+                <span>🍓 World & Aesthetic Notes</span>
+              </h4>
+              <textarea id="series-world-input" rows="4" oninput="updateSeriesMeta()" placeholder="Describe your setting, magic rules, or pastel color palette..." class="w-full p-3 rounded-xl bg-white border border-sakura-200 focus:border-sakura-500 focus:outline-none text-xs leading-relaxed text-pink-950"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 2: CHARACTER CREATOR                                  -->
+      <!-- ========================================================= -->
+      <section id="tab-characters" class="tab-view hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-pink-950">🎀 Character Cast & Chibi Studio</h2>
+            <p class="text-sm text-pink-800/75">Design adorable custom chibi avatars or upload character art for your cast.</p>
+          </div>
+          <button onclick="openCharacterModal()" class="kawaii-btn px-5 py-3 rounded-2xl bg-gradient-to-r from-sakura-500 to-sakura-600 text-white font-display font-bold text-sm shadow-md shadow-sakura-300 flex items-center gap-2">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Create New Character</span>
+          </button>
+        </div>
+
+        <!-- Character Cards Grid -->
+        <div id="character-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 3: EPISODE ORGANIZER (KANBAN BOARD)                   -->
+      <!-- ========================================================= -->
+      <section id="tab-episodes" class="tab-view hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-pink-950">🗓️ Episode Production Board</h2>
+            <p class="text-sm text-pink-800/75">Track episodes from rough spark to published Webtoon chapter!</p>
+          </div>
+          <button onclick="openEpisodeModal()" class="kawaii-btn px-5 py-3 rounded-2xl bg-gradient-to-r from-sakura-500 to-sakura-600 text-white font-display font-bold text-sm shadow-md shadow-sakura-300 flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            <span>Add Episode</span>
+          </button>
+        </div>
+
+        <!-- Horizontal Scrollable Kanban Columns -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4 items-start">
+          <!-- Columns rendered dynamically -->
+          <div id="kanban-board" class="col-span-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4"></div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 4: STORYLINE & SCRIPT WRITER                          -->
+      <!-- ========================================================= -->
+      <section id="tab-script" class="tab-view hidden space-y-6">
+        <!-- Story Arcs Ribbon -->
+        <div class="kawaii-card p-5">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div>
+              <h3 class="text-lg font-bold text-pink-950">🌈 Season Story Arcs</h3>
+              <p class="text-xs text-pink-800/75">Map out your overarching romance beats and plot twists.</p>
+            </div>
+            <button onclick="addStoryArc()" class="kawaii-btn px-3.5 py-2 rounded-xl bg-sakura-100 hover:bg-sakura-200 text-sakura-700 font-bold text-xs border border-sakura-300">
+              + Add Story Arc
+            </button>
+          </div>
+          <div id="story-arcs-list" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <!-- Story Arc Cards -->
+          </div>
+        </div>
+
+        <!-- Episode Script Editor + Live Vertical Scroll Preview -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+          <!-- Left: Panel-by-Panel Script Builder (7 cols) -->
+          <div class="xl:col-span-7 kawaii-card p-5 sm:p-6 space-y-5">
+            <div class="flex flex-wrap items-center justify-between gap-3 border-b border-sakura-200 pb-4">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">✍️</span>
+                <div>
+                  <label class="block text-[11px] font-extrabold uppercase text-sakura-600">Editing Episode Script</label>
+                  <select id="script-episode-select" onchange="selectScriptEpisode(this.value)" class="font-display font-bold text-base sm:text-lg text-pink-950 bg-transparent focus:outline-none cursor-pointer">
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+              </div>
+              <button onclick="addScriptPanel()" class="kawaii-btn px-4 py-2.5 rounded-xl bg-gradient-to-r from-sakura-500 to-sakura-600 text-white font-bold text-xs shadow-sm flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Add Panel</span>
+              </button>
+            </div>
+
+            <div id="script-panels-container" class="space-y-4">
+              <!-- Script Panels List -->
+            </div>
+          </div>
+
+          <!-- Right: Live Webtoon Mobile Vertical Scroll Reader Preview (5 cols) -->
+          <div class="xl:col-span-5 kawaii-card p-5 sticky top-24">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">📱</span>
+                <h3 class="font-display font-bold text-pink-950">Webtoon Scroll Preview</h3>
+              </div>
+              <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-sakura-100 text-sakura-600">Live Reader View</span>
+            </div>
+
+            <!-- Simulated Smartphone Frame -->
+            <div class="mx-auto max-w-[360px] rounded-[2.2rem] border-[6px] border-pink-950 bg-white shadow-xl overflow-hidden">
+              <!-- Phone Status Bar -->
+              <div class="bg-pink-950 text-white px-5 py-2 flex items-center justify-between text-[11px] font-bold">
+                <span id="preview-ep-header">Ep. 1</span>
+                <span>🌸 PINKTOON</span>
+                <span>100% 💖</span>
+              </div>
+
+              <!-- Vertical Scroll Strip -->
+              <div id="webtoon-vertical-preview" class="h-[540px] overflow-y-auto bg-gradient-to-b from-white via-sakura-50/40 to-white p-4 space-y-6">
+                <!-- Rendered Vertical Panels -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- TAB 5: FICTIONAL COVER DESIGNER                           -->
+      <!-- ========================================================= -->
+      <section id="tab-cover" class="tab-view hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-pink-950">🎨 Webtoon Cover & Thumbnail Studio</h2>
+            <p class="text-sm text-pink-800/75">Customize gradients, chibi characters, stickers, and Webtoon badges—then export PNG!</p>
+          </div>
+          <button onclick="downloadCoverPNG()" class="kawaii-btn px-5 py-3 rounded-2xl bg-gradient-to-r from-sakura-500 to-sakura-600 text-white font-display font-bold text-sm shadow-lg shadow-sakura-300 flex items-center gap-2">
+            <i data-lucide="image-down" class="w-4 h-4"></i>
+            <span>Download Cover PNG</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Cover Controls (7 cols) -->
+          <div class="lg:col-span-7 kawaii-card p-6 space-y-5">
+            <!-- Title & Typography -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1.5">Cover Title Text</label>
+                <input type="text" id="cover-title-input" oninput="updateCoverState()" class="w-full px-3.5 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none font-bold text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1.5">Subtitle / Creator Tag</label>
+                <input type="text" id="cover-subtitle-input" oninput="updateCoverState()" class="w-full px-3.5 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none font-bold text-sm" />
+              </div>
+            </div>
+
+            <!-- Background Theme Presets -->
+            <div>
+              <label class="block text-xs font-extrabold uppercase text-pink-800 mb-2">Pastel Backdrop Theme</label>
+              <div id="cover-bg-presets" class="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Featured Characters on Cover -->
+            <div>
+              <label class="block text-xs font-extrabold uppercase text-pink-800 mb-2">Featured Cast on Cover (Click to Toggle)</label>
+              <div id="cover-char-toggles" class="flex flex-wrap gap-2">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+
+            <!-- Webtoon Badges & Kawaii Stickers -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-sakura-200">
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-2">Webtoon Platform Badges</label>
+                <div class="flex flex-wrap gap-2">
+                  <button type="button" onclick="toggleCoverBadge('ORIGINAL')" id="badge-btn-ORIGINAL" class="px-3 py-1.5 rounded-xl text-xs font-extrabold border-2 transition-all">
+                    💚 ORIGINAL
+                  </button>
+                  <button type="button" onclick="toggleCoverBadge('UP')" id="badge-btn-UP" class="px-3 py-1.5 rounded-xl text-xs font-extrabold border-2 transition-all">
+                    🔺 UP
+                  </button>
+                  <button type="button" onclick="toggleCoverBadge('NEW')" id="badge-btn-NEW" class="px-3 py-1.5 rounded-xl text-xs font-extrabold border-2 transition-all">
+                    ✨ NEW
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-2">Kawaii Overlay Stickers</label>
+                <div id="cover-sticker-toggles" class="flex flex-wrap gap-1.5">
+                  <!-- Rendered by JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Title Color & Text Position -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 border-t border-sakura-200">
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Title Fill Color</label>
+                <input type="color" id="cover-title-color" onchange="updateCoverState()" value="#FFFFFF" class="w-full h-10 rounded-xl cursor-pointer border-2 border-sakura-200" />
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Title Outline Color</label>
+                <input type="color" id="cover-outline-color" onchange="updateCoverState()" value="#FF1493" class="w-full h-10 rounded-xl cursor-pointer border-2 border-sakura-200" />
+              </div>
+              <div class="col-span-2 sm:col-span-1">
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Title Placement</label>
+                <select id="cover-title-pos" onchange="updateCoverState()" class="w-full h-10 px-3 rounded-xl bg-sakura-50 border-2 border-sakura-200 font-bold text-xs">
+                  <option value="bottom">Bottom Classic</option>
+                  <option value="top">Top Banner</option>
+                  <option value="center">Center Spotlight</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live HTML5 Canvas & Mock Webtoon App Shelf (5 cols) -->
+          <div class="lg:col-span-5 space-y-5">
+            <div class="kawaii-card p-5 flex flex-col items-center">
+              <div class="w-full flex items-center justify-between mb-3">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-sakura-600">Live Cover Canvas (3:4 Vertical)</span>
+                <span class="text-xs font-bold text-pink-800/70">600 × 800 px</span>
+              </div>
+              <canvas id="cover-canvas" width="600" height="800" class="w-full max-w-[320px] rounded-2xl shadow-xl border-4 border-white"></canvas>
+            </div>
+
+            <!-- Mock Webtoon App Shelf Preview -->
+            <div class="kawaii-card p-4 bg-white">
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-extrabold text-pink-950 flex items-center gap-1.5">
+                  <span>📱</span> How it looks on Pinktoon App Shelf
+                </span>
+                <span class="text-[10px] font-bold text-sakura-500">Romance • Fantasy</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2.5">
+                <!-- Active Custom Cover Mini -->
+                <div class="space-y-1">
+                  <div class="relative aspect-[3/4] rounded-xl overflow-hidden border-2 border-sakura-500 shadow-sm">
+                    <img id="shelf-preview-img" alt="Your Webtoon Cover" class="w-full h-full object-cover" />
+                  </div>
+                  <p id="shelf-preview-title" class="text-[11px] font-extrabold text-pink-950 truncate">Your Series</p>
+                  <p class="text-[10px] text-sakura-600 font-bold">💖 9.94 ★</p>
+                </div>
+
+                <!-- Neighboring Mock Series 1 -->
+                <div class="space-y-1 opacity-75">
+                  <div class="aspect-[3/4] rounded-xl bg-gradient-to-br from-purple-200 to-pink-200 p-2 flex flex-col justify-between border border-sakura-200">
+                    <span class="self-start text-[9px] font-black bg-emerald-500 text-white px-1.5 py-0.5 rounded">ORIGINAL</span>
+                    <div class="text-center text-2xl">🌙👑</div>
+                    <span class="text-[10px] font-display font-bold text-purple-900 leading-tight">Moonlight Waltz</span>
+                  </div>
+                  <p class="text-[11px] font-bold text-pink-900 truncate">Moonlight Waltz</p>
+                  <p class="text-[10px] text-pink-700/70 font-semibold">💖 9.81 ★</p>
+                </div>
+
+                <!-- Neighboring Mock Series 2 -->
+                <div class="space-y-1 opacity-75">
+                  <div class="aspect-[3/4] rounded-xl bg-gradient-to-br from-amber-100 to-rose-200 p-2 flex flex-col justify-between border border-sakura-200">
+                    <span class="self-start text-[9px] font-black bg-rose-500 text-white px-1.5 py-0.5 rounded">UP</span>
+                    <div class="text-center text-2xl">🍓🧁</div>
+                    <span class="text-[10px] font-display font-bold text-rose-900 leading-tight">Strawberry Idol</span>
+                  </div>
+                  <p class="text-[11px] font-bold text-pink-900 truncate">Strawberry Idol</p>
+                  <p class="text-[10px] text-pink-700/70 font-semibold">💖 9.76 ★</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 1: CHARACTER CREATOR / CHIBI AVATAR BUILDER         -->
+  <!-- ========================================================= -->
+  <div id="character-modal" class="fixed inset-0 z-50 hidden bg-pink-950/40 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+    <div class="kawaii-card w-full max-w-2xl p-6 my-8 relative animate-[fadeIn_0.2s_ease-out]">
+      <div class="flex items-center justify-between border-b border-sakura-200 pb-3 mb-5">
+        <h3 id="char-modal-title" class="text-xl font-bold text-pink-950">🎀 Create Character</h3>
+        <button onclick="closeCharacterModal()" class="w-8 h-8 rounded-full bg-sakura-100 hover:bg-sakura-200 text-sakura-700 font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <form id="character-form" onsubmit="saveCharacter(event)" class="space-y-5">
+        <input type="hidden" id="char-id" />
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+          <!-- Left: Live Chibi Avatar Builder Preview (5 cols) -->
+          <div class="md:col-span-5 flex flex-col items-center bg-sakura-50 p-4 rounded-2xl border-2 border-sakura-200 space-y-3">
+            <div id="chibi-preview-box" class="w-36 h-36 rounded-3xl bg-white shadow-inner border-2 border-sakura-300 flex items-center justify-center overflow-hidden">
+              <!-- Live SVG or Uploaded Image -->
+            </div>
+
+            <!-- Toggle Avatar Mode: Chibi SVG Builder vs Custom Image Upload -->
+            <div class="flex gap-1.5 w-full">
+              <button type="button" onclick="setAvatarMode('chibi')" id="btn-mode-chibi" class="flex-1 py-1.5 rounded-xl text-xs font-extrabold bg-sakura-500 text-white">✨ Chibi Maker</button>
+              <label class="flex-1 py-1.5 rounded-xl text-xs font-extrabold bg-white border border-sakura-300 text-sakura-700 text-center cursor-pointer hover:bg-sakura-100">
+                📷 Upload Art
+                <input type="file" accept="image/*" class="hidden" onchange="handleCharacterImageUpload(event)" />
+              </label>
+            </div>
+
+            <!-- Chibi Customization Controls -->
+            <div id="chibi-controls" class="w-full space-y-2.5 pt-1 text-xs">
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="font-bold text-pink-900 block mb-0.5">Hair Style</label>
+                  <select id="chibi-hair-style" onchange="refreshChibiPreview()" class="w-full p-1.5 rounded-lg bg-white border border-sakura-200 font-semibold">
+                    <option value="long">Long Wavy</option>
+                    <option value="twintails">Twin Tails</option>
+                    <option value="bob">Cute Bob</option>
+                    <option value="spiky">Prince Spiky</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="font-bold text-pink-900 block mb-0.5">Accessory</label>
+                  <select id="chibi-accessory" onchange="refreshChibiPreview()" class="w-full p-1.5 rounded-lg bg-white border border-sakura-200 font-semibold">
+                    <option value="bow">Sakura Bow 🎀</option>
+                    <option value="horns">Demon Horns 😈</option>
+                    <option value="halo">Angel Halo 😇</option>
+                    <option value="catears">Cat Ears 🐱</option>
+                    <option value="glasses">Round Glasses 👓</option>
+                    <option value="none">None</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2">
+                <div>
+                  <label class="font-bold text-pink-900 block mb-0.5">Hair</label>
+                  <input type="color" id="chibi-hair-color" value="#FF85A2" onchange="refreshChibiPreview()" class="w-full h-7 rounded cursor-pointer border border-sakura-200" />
+                </div>
+                <div>
+                  <label class="font-bold text-pink-900 block mb-0.5">Eyes</label>
+                  <input type="color" id="chibi-eye-color" value="#8A2BE2" onchange="refreshChibiPreview()" class="w-full h-7 rounded cursor-pointer border border-sakura-200" />
+                </div>
+                <div>
+                  <label class="font-bold text-pink-900 block mb-0.5">Skin</label>
+                  <select id="chibi-skin-color" onchange="refreshChibiPreview()" class="w-full h-7 px-1 rounded bg-white border border-sakura-200 font-semibold">
+                    <option value="#FFE5D9">Porcelain</option>
+                    <option value="#FCD5CE">Peachy</option>
+                    <option value="#E6B89C">Warm Tan</option>
+                    <option value="#A47148">Rich Cocoa</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Character Profile Fields (7 cols) -->
+          <div class="md:col-span-7 space-y-3.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Character Name *</label>
+                <input type="text" id="char-name" required placeholder="e.g., Hana Momozono" class="w-full px-3.5 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none font-bold text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Story Role</label>
+                <select id="char-role" class="w-full px-3.5 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none font-bold text-sm">
+                  <option value="Protagonist">🌸 Protagonist</option>
+                  <option value="Love Interest">💘 Love Interest</option>
+                  <option value="Best Friend">✨ Best Friend</option>
+                  <option value="Rival">⚡ Rival</option>
+                  <option value="Mentor / Mascot">🐾 Mentor / Mascot</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Personality Traits</label>
+                <input type="text" id="char-traits" placeholder="Bubbly, clumsy, fiercely loyal" class="w-full px-3.5 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none text-sm font-semibold" />
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Signature Theme Color</label>
+                <div class="flex items-center gap-2">
+                  <input type="color" id="char-color" value="#FF69B4" class="w-12 h-9 rounded-xl cursor-pointer border-2 border-sakura-200" />
+                  <span class="text-xs text-pink-800/70 font-semibold">Used for dialogue tags</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Appearance & Outfit Notes</label>
+              <textarea id="char-appearance" rows="2" placeholder="Strawberry apron, oversized pastel cardigan, cherry hairpins..." class="w-full px-3.5 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none text-sm"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Backstory & Secret Goal</label>
+              <textarea id="char-bio" rows="2" placeholder="Wants to save her grandmother's magical bakery from closing..." class="w-full px-3.5 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 focus:border-sakura-500 focus:outline-none text-sm"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2.5 pt-3 border-t border-sakura-200">
+          <button type="button" onclick="closeCharacterModal()" class="px-4 py-2.5 rounded-xl bg-sakura-100 text-sakura-700 font-bold text-sm">Cancel</button>
+          <button type="submit" class="kawaii-btn px-6 py-2.5 rounded-xl bg-gradient-to-r from-sakura-500 to-sakura-600 text-white font-display font-bold text-sm shadow-md">Save Character 💖</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 2: EPISODE ADD / EDIT MODAL                         -->
+  <!-- ========================================================= -->
+  <div id="episode-modal" class="fixed inset-0 z-50 hidden bg-pink-950/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="kawaii-card w-full max-w-lg p-6 relative">
+      <div class="flex items-center justify-between border-b border-sakura-200 pb-3 mb-4">
+        <h3 id="ep-modal-title" class="text-xl font-bold text-pink-950">🗓️ Episode Details</h3>
+        <button onclick="closeEpisodeModal()" class="w-8 h-8 rounded-full bg-sakura-100 hover:bg-sakura-200 text-sakura-700 font-bold flex items-center justify-center">✕</button>
+      </div>
+
+      <form onsubmit="saveEpisode(event)" class="space-y-4">
+        <input type="hidden" id="ep-id" />
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Episode #</label>
+            <input type="number" id="ep-number" min="1" required class="w-full px-3 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 font-bold text-sm" />
+          </div>
+          <div class="col-span-2">
+            <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Episode Title *</label>
+            <input type="text" id="ep-title" required placeholder="e.g., A Sweet Disaster!" class="w-full px-3 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 font-bold text-sm" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Production Stage</label>
+            <select id="ep-status" class="w-full px-3 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 font-bold text-sm">
+              <option value="Ideas">💡 Ideas</option>
+              <option value="Scripting">✍️ Scripting</option>
+              <option value="Storyboarding">📐 Storyboarding</option>
+              <option value="Lineart/Coloring">🎨 Lineart/Coloring</option>
+              <option value="Published">🌟 Published</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Target Panel Goal</label>
+            <input type="number" id="ep-goal" min="5" max="150" value="45" class="w-full px-3 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 font-bold text-sm" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold uppercase text-pink-800 mb-1">Episode Summary & Cliffhanger</label>
+          <textarea id="ep-summary" rows="3" placeholder="What happens in this chapter?" class="w-full px-3 py-2 rounded-xl bg-sakura-50 border-2 border-sakura-200 text-sm"></textarea>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeEpisodeModal()" class="px-4 py-2 rounded-xl bg-sakura-100 text-sakura-700 font-bold text-sm">Cancel</button>
+          <button type="submit" class="kawaii-btn px-5 py-2 rounded-xl bg-gradient-to-r from-sakura-500 to-sakura-600 text-white font-display font-bold text-sm">Save Episode ✨</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL 3: CONFIRM RESET MODAL (NO NATIVE CONFIRM/ALERT)    -->
+  <!-- ========================================================= -->
+  <div id="reset-modal" class="fixed inset-0 z-50 hidden bg-pink-950/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="kawaii-card w-full max-w-md p-6 text-center space-y-4">
+      <div class="text-4xl">🌸</div>
+      <h3 class="text-xl font-bold text-pink-950">Restore Sample Webtoon?</h3>
+      <p class="text-sm text-pink-800/80">
+        This will reload the pre-made romance/fantasy sample project (<b>"Cherry Blossom Café & The Demon Prince"</b>). Export your JSON first if you want to keep your current edits!
+      </p>
+      <div class="flex justify-center gap-3 pt-2">
+        <button onclick="closeResetModal()" class="px-4 py-2 rounded-xl bg-sakura-100 text-sakura-700 font-bold text-sm">Keep My Project</button>
+        <button onclick="confirmResetProject()" class="kawaii-btn px-5 py-2 rounded-xl bg-rose-500 text-white font-bold text-sm shadow">Restore Sample</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- APPLICATION JAVASCRIPT LOGIC                              -->
+  <!-- ========================================================= -->
+  <script>
+    const STORAGE_KEY = 'pinktoon_studio_project_v1';
+
+    const ALL_GENRES = [
+      '💘 Romance', '✨ Fantasy', '🍰 Slice of Life', '😂 Comedy',
+      '👑 Royalty / Isekai', '🔮 Magical Girl', '🏫 School Life', '🎭 Drama'
+    ];
+
+    const KANBAN_STAGES = [
+      { id: 'Ideas', emoji: '💡', color: 'bg-amber-50 border-amber-200 text-amber-800' },
+      { id: 'Scripting', emoji: '✍️', color: 'bg-pink-50 border-pink-200 text-pink-800' },
+      { id: 'Storyboarding', emoji: '📐', color: 'bg-purple-50 border-purple-200 text-purple-800' },
+      { id: 'Lineart/Coloring', emoji: '🎨', color: 'bg-rose-50 border-rose-200 text-rose-800' },
+      { id: 'Published', emoji: '🌟', color: 'bg-emerald-50 border-emerald-200 text-emerald-800' }
+    ];
+
+    const COVER_BACKDROPS = [
+      { id: 'sakura', name: 'Sakura Bliss', colors: ['#FFD1DC', '#FF69B4'] },
+      { id: 'peach', name: 'Peach Sorbet', colors: ['#FFE5D9', '#FF8FA3'] },
+      { id: 'lavender', name: 'Starlight Lilac', colors: ['#F3D9FA', '#C77DFF'] },
+      { id: 'strawberry', name: 'Berry Milk', colors: ['#FFF0F5', '#FF1493'] },
+      { id: 'sunset', name: 'Magic Dusk', colors: ['#FFCCD5', '#7209B7'] },
+      { id: 'mint', name: 'Matcha Rose', colors: ['#E0F7FA', '#FF758F'] }
+    ];
+
+    const COVER_STICKERS = [
+      { id: 'sparkles', label: '✨ Sparkles' },
+      { id: 'hearts', label: '💖 Floating Hearts' },
+      { id: 'petals', label: '🌸 Sakura Petals' },
+      { id: 'stars', label: '⭐ Kawaii Stars' }
+    ];
+
+    // Pre-loaded Rich Sample Project
+    function getDefaultProject() {
+      return {
+        meta: {
+          title: 'Cherry Blossom Café & The Demon Prince',
+          author: 'Momo & Pip',
+          tagline: "When a clumsy pastry witch accidentally summons the Underworld's sharpest critic, sugar and sparks fly!",
+          synopsis: 'Hana Momozono is determined to save her late grandmother’s enchanted patisserie before the Cherry Blossom Festival. While testing a forbidden strawberry soufflé recipe at midnight, she accidentally summons Lord Lucien—the notoriously cold Crown Prince of the Demon Realm—who turns out to have a secret obsession with pastel macarons.',
+          audience: 'Young Adult (16-24) • Shojo / Josei',
+          schedule: 'Every Sunday • Pastel Originals',
+          genres: ['💘 Romance', '✨ Fantasy', '🍰 Slice of Life', '😂 Comedy'],
+          worldNotes: 'A cozy floating town where sakura trees bloom year-round. Magic is baked into pastries using starlight sugar and bottled morning dew.'
+        },
+        characters: [
+          {
+            id: 'char_1',
+            name: 'Hana Momozono',
+            role: 'Protagonist',
+            traits: 'Optimistic, clumsy, warm-hearted, stubborn',
+            color: '#FF69B4',
+            appearance: 'Pink twin-tails tied with silk ribbons, frilly strawberry apron, sparkly violet eyes.',
+            bio: 'Inherited the Cherry Blossom Café. Her magic goes haywire whenever she blushes!',
+            avatarMode: 'chibi',
+            uploadedImage: '',
+            chibi: {
+              hairStyle: 'twintails',
+              hairColor: '#FF85A2',
+              eyeColor: '#9D4EDD',
+              skinColor: '#FFE5D9',
+              accessory: 'bow'
+            }
+          },
+          {
+            id: 'char_2',
+            name: 'Prince Lucien',
+            role: 'Love Interest',
+            traits: 'Stoic, secretly sweet-toothed, protective, dramatic',
+            color: '#9B5DE5',
+            appearance: 'Silver-black tousled hair, obsidian demon horns, tailored café uniform vest.',
+            bio: 'Bound by a pastry contract to work as Hana’s part-time barista until he tastes the legendary Starlight Tart.',
+            avatarMode: 'chibi',
+            uploadedImage: '',
+            chibi: {
+              hairStyle: 'spiky',
+              hairColor: '#3A2E4F',
+              eyeColor: '#FF1493',
+              skinColor: '#FCD5CE',
+              accessory: 'horns'
+            }
+          },
+          {
+            id: 'char_3',
+            name: 'Mochi the Familiar',
+            role: 'Mentor / Mascot',
+            traits: 'Sassy, sleepy, food-motivated',
+            color: '#FF9E00',
+            appearance: 'Fluffy cream-colored cat spirit wearing a tiny golden halo.',
+            bio: 'Has guarded the café oven for 300 years and judges Lucien’s latte art mercilessly.',
+            avatarMode: 'chibi',
+            uploadedImage: '',
+            chibi: {
+              hairStyle: 'bob',
+              hairColor: '#FFF1D0',
+              eyeColor: '#FF6B6B',
+              skinColor: '#FFE5D9',
+              accessory: 'catears'
+            }
+          }
+        ],
+        episodes: [
+          {
+            id: 'ep_1',
+            number: 1,
+            title: 'The Midnight Soufflé Summoning!',
+            status: 'Published',
+            goal: 48,
+            summary: 'Hana drops a pinch of dragon-sugar into her batter, summoning Prince Lucien right onto her kitchen counter.'
+          },
+          {
+            id: 'ep_2',
+            number: 2,
+            title: 'A Demon in a Frilly Apron',
+            status: 'Lineart/Coloring',
+            goal: 45,
+            summary: 'Lucien agrees to wash dishes in exchange for daily strawberry shortcake, sparking chaos during the morning rush.'
+          },
+          {
+            id: 'ep_3',
+            number: 3,
+            title: 'Rival Bakery Across the Canal',
+            status: 'Scripting',
+            goal: 50,
+            summary: 'The glamorous Duchess Vivienne challenges Hana to the Spring Blossom Bake-Off!'
+          },
+          {
+            id: 'ep_4',
+            number: 4,
+            title: 'Umbrella Under Pink Rain',
+            status: 'Ideas',
+            goal: 42,
+            summary: 'A sudden sakura petal storm traps Hana and Lucien inside the greenhouse after closing hours.'
+          }
+        ],
+        arcs: [
+          {
+            id: 'arc_1',
+            title: 'Arc 1: The Sweet Contract',
+            episodesRange: 'Eps 1 – 5',
+            summary: 'Hana and Lucien form an unlikely partnership to save the café from eviction.'
+          },
+          {
+            id: 'arc_2',
+            title: 'Arc 2: The Royal Bake-Off',
+            episodesRange: 'Eps 6 – 12',
+            summary: 'Competing against elite pastry mages while Lucien hides his true underworld identity.'
+          },
+          {
+            id: 'arc_3',
+            title: 'Arc 3: Festival of Starlight',
+            episodesRange: 'Eps 13 – 18',
+            summary: 'Confessions under the enchanted sakura tree as the summoning contract nears its end.'
+          }
+        ],
+        scripts: {
+          ep_1: [
+            {
+              id: 'pan_1',
+              camera: 'Wide Establishing Shot',
+              visual: 'Moonlight pours through stained-glass windows of Cherry Blossom Café. Pink flour floats in the air like fairy dust.',
+              characterId: '',
+              bubbleType: 'narration',
+              dialogue: 'Rule #1 of Pastry Magic: Never bake past midnight when the pink moon is full.',
+              sfx: '✨ FWOOSH ~ ✨'
+            },
+            {
+              id: 'pan_2',
+              camera: 'Close-Up',
+              visual: 'Hana peeks nervously over the oven door with flour on her nose, holding a glowing whisk.',
+              characterId: 'char_1',
+              bubbleType: 'speech',
+              dialogue: 'Please don’t explode this time... just rise nice and fluffy!',
+              sfx: '💓 DOKI DOKI'
+            },
+            {
+              id: 'pan_3',
+              camera: 'Dramatic Low Angle',
+              visual: 'Smoke clears in a swirl of purple sparkles! Prince Lucien sits cross-legged on the pastry counter, holding a warm strawberry macaron.',
+              characterId: 'char_2',
+              bubbleType: 'speech',
+              dialogue: 'Which mortal dared summon the Crown Prince of Shadows... and why does it smell like vanilla?',
+              sfx: '💥 POOF!!'
+            },
+            {
+              id: 'pan_4',
+              camera: 'Chibi Reaction Shot',
+              visual: 'Hana’s soul leaves her body in chibi form while Mochi the cat facepalms.',
+              characterId: 'char_1',
+              bubbleType: 'shout',
+              dialogue: 'MY SOUFFLÉ TURNED INTO A HANDSOME DEMON?!',
+              sfx: '😱 KYAAAA!!'
+            }
+          ],
+          ep_2: [
+            {
+              id: 'pan_201',
+              camera: 'Medium Shot',
+              visual: 'Lucien stares intensely at a frilly pink lace apron as if it were a cursed artifact.',
+              characterId: 'char_2',
+              bubbleType: 'thought',
+              dialogue: 'If the Royal Underworld Guard sees me wearing ruffles, I will vaporize this entire street.',
+              sfx: '⚡ MENACING...'
+            }
+          ]
+        },
+        cover: {
+          title: 'Cherry Blossom Café & The Demon Prince',
+          subtitle: 'By Momo & Pip',
+          backdropId: 'sakura',
+          featuredCharIds: ['char_1', 'char_2'],
+          badges: ['ORIGINAL', 'UP'],
+          stickers: ['sparkles', 'hearts', 'petals'],
+          titleColor: '#FFFFFF',
+          outlineColor: '#FF1493',
+          titlePos: 'bottom'
+        }
+      };
+    }
+
+    let project = loadProject();
+    let activeScriptEpisodeId = project.episodes[0]?.id || 'ep_1';
+    let modalAvatarMode = 'chibi';
+    let modalUploadedImage = '';
+
+    function loadProject() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          return JSON.parse(raw);
+        }
+      } catch (e) {
+        console.error('Failed to load project from storage:', e);
+      }
+      return getDefaultProject();
+    }
+
+    function saveProject(showFeedback = true) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
+        if (showFeedback) {
+          const indicator = document.getElementById('save-indicator');
+          if (indicator) {
+            indicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-sakura-500"></span> Saved just now ✨`;
+            setTimeout(() => {
+              indicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Auto-saved`;
+            }, 1800);
+          }
+        }
+      } catch (e) {
+        showToast('Storage limit reached! Try exporting JSON backup.', 'error');
+      }
+    }
+
+    // Toast Helper
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bg = type === 'error' ? 'bg-rose-600 text-white' : 'bg-pink-950 text-white border-2 border-sakura-400';
+      toast.className = `${bg} px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 pointer-events-auto transition-all`;
+      toast.innerHTML = `<span>${type === 'error' ? '⚠️' : '🌸'}</span><span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        setTimeout(() => toast.remove(), 250);
+      }, 2800);
+    }
+
+    // =========================================================
+    // TAB NAVIGATION
+    // =========================================================
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        const isActive = btn.dataset.tab === tabName;
+        if (isActive) {
+          btn.classList.add('bg-gradient-to-r', 'from-sakura-500', 'to-sakura-600', 'text-white', 'shadow-md', 'shadow-sakura-300');
+          btn.classList.remove('text-pink-900', 'hover:bg-sakura-100');
+        } else {
+          btn.classList.remove('bg-gradient-to-r', 'from-sakura-500', 'to-sakura-600', 'text-white', 'shadow-md', 'shadow-sakura-300');
+          btn.classList.add('text-pink-900', 'hover:bg-sakura-100');
+        }
+      });
+
+      if (tabName === 'cover') {
+        renderCoverDesignerControls();
+        drawCoverCanvas();
+      } else if (tabName === 'script') {
+        renderScriptWorkspace();
+      } else if (tabName === 'dashboard') {
+        renderDashboard();
+      }
+    }
+
+    // =========================================================
+    // TAB 1: DASHBOARD RENDER & UPDATES
+    // =========================================================
+    function renderDashboard() {
+      const { meta, characters, episodes, scripts } = project;
+      document.getElementById('header-series-subtitle').textContent = meta.title;
+      document.getElementById('dash-hero-title').textContent = meta.title;
+      document.getElementById('dash-hero-tagline').textContent = meta.tagline;
+
+      document.getElementById('series-title-input').value = meta.title;
+      document.getElementById('series-author-input').value = meta.author;
+      document.getElementById('series-tagline-input').value = meta.tagline;
+      document.getElementById('series-synopsis-input').value = meta.synopsis;
+      document.getElementById('series-audience-input').value = meta.audience;
+      document.getElementById('series-schedule-input').value = meta.schedule;
+      document.getElementById('series-world-input').value = meta.worldNotes || '';
+
+      // Stats
+      const totalPanels = Object.values(scripts).reduce((acc, arr) => acc + arr.length, 0);
+      const publishedCount = episodes.filter(e => e.status === 'Published').length;
+
+      document.getElementById('stat-characters').textContent = characters.length;
+      document.getElementById('stat-episodes').textContent = episodes.length;
+      document.getElementById('stat-panels').textContent = totalPanels;
+      document.getElementById('stat-published').textContent = publishedCount;
+
+      document.getElementById('nav-char-count').textContent = characters.length;
+      document.getElementById('nav-ep-count').textContent = episodes.length;
+
+      // Genre tags
+      const genreContainer = document.getElementById('genre-tag-selector');
+      genreContainer.innerHTML = ALL_GENRES.map(genre => {
+        const selected = meta.genres.includes(genre);
+        return `
+          <button type="button" onclick="toggleGenre('${genre}')"
+            class="px-3.5 py-1.5 rounded-full text-xs font-extrabold border-2 transition-all ${
+              selected
+                ? 'bg-sakura-500 text-white border-sakura-600 shadow-sm'
+                : 'bg-sakura-50 text-pink-800 border-sakura-200 hover:border-sakura-400'
+            }">
+            ${genre}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function updateSeriesMeta() {
+      project.meta.title = document.getElementById('series-title-input').value;
+      project.meta.author = document.getElementById('series-author-input').value;
+      project.meta.tagline = document.getElementById('series-tagline-input').value;
+      project.meta.synopsis = document.getElementById('series-synopsis-input').value;
+      project.meta.audience = document.getElementById('series-audience-input').value;
+      project.meta.schedule = document.getElementById('series-schedule-input').value;
+      project.meta.worldNotes = document.getElementById('series-world-input').value;
+
+      document.getElementById('header-series-subtitle').textContent = project.meta.title;
+      document.getElementById('dash-hero-title').textContent = project.meta.title;
+      document.getElementById('dash-hero-tagline').textContent = project.meta.tagline;
+      saveProject();
+    }
+
+    function toggleGenre(genre) {
+      const idx = project.meta.genres.indexOf(genre);
+      if (idx > -1) {
+        project.meta.genres.splice(idx, 1);
+      } else {
+        if (project.meta.genres.length >= 4) {
+          showToast('You can select up to 4 genre tags!', 'error');
+          return;
+        }
+        project.meta.genres.push(genre);
+      }
+      saveProject();
+      renderDashboard();
+    }
+
+    // =========================================================
+    // SVG CHIBI GENERATOR (REUSABLE IN CARDS & COVER CANVAS)
+    // =========================================================
+    function generateChibiSVG(chibi, size = 120) {
+      const { hairStyle, hairColor, eyeColor, skinColor, accessory } = chibi;
+
+      // Back hair shapes
+      let backHair = '';
+      if (hairStyle === 'long') {
+        backHair = `<rect x="26" y="34" width="68" height="68" rx="30" fill="${hairColor}" />`;
+      } else if (hairStyle === 'twintails') {
+        backHair = `
+          <ellipse cx="22" cy="68" rx="13" ry="30" transform="rotate(12 22 68)" fill="${hairColor}" />
+          <ellipse cx="98" cy="68" rx="13" ry="30" transform="rotate(-12 98 68)" fill="${hairColor}" />
+        `;
+      } else if (hairStyle === 'bob') {
+        backHair = `<rect x="27" y="32" width="66" height="50" rx="28" fill="${hairColor}" />`;
+      }
+
+      // Front bangs
+      let frontHair = `
+        <path d="M28 52 C28 24, 92 24, 92 52 C84 42, 72 46, 60 38 C48 46, 36 42, 28 52 Z" fill="${hairColor}" />
+      `;
+      if (hairStyle === 'spiky') {
+        frontHair = `
+          <path d="M26 54 L22 30 L38 38 L48 18 L60 34 L74 18 L82 38 L98 30 L94 54 C80 42, 40 42, 26 54 Z" fill="${hairColor}" />
+        `;
+      }
+
+      // Cute Accessories
+      let accSVG = '';
+      if (accessory === 'bow') {
+        accSVG = `
+          <g transform="translate(60, 22)">
+            <path d="M0 0 L-16 -9 L-14 9 Z" fill="#FF1493" />
+            <path d="M0 0 L16 -9 L14 9 Z" fill="#FF1493" />
+            <circle cx="0" cy="0" r="4.5" fill="#FFF0F5" />
+          </g>
+        `;
+      } else if (accessory === 'horns') {
+        accSVG = `
+          <path d="M36 32 Q26 14 40 16 Q42 24 44 30 Z" fill="#3A1D2C" />
+          <path d="M84 32 Q94 14 80 16 Q78 24 76 30 Z" fill="#3A1D2C" />
+        `;
+      } else if (accessory === 'halo') {
+        accSVG = `<ellipse cx="60" cy="14" rx="20" ry="5" fill="none" stroke="#FFD166" stroke-width="3.5" />`;
+      } else if (accessory === 'catears') {
+        accSVG = `
+          <polygon points="30,36 34,14 48,28" fill="${hairColor}" />
+          <polygon points="90,36 86,14 72,28" fill="${hairColor}" />
+          <polygon points="33,33 35,19 45,28" fill="#FFB3C6" />
+          <polygon points="87,33 85,19 75,28" fill="#FFB3C6" />
+        `;
+      } else if (accessory === 'glasses') {
+        accSVG = `
+          <circle cx="45" cy="60" r="11" fill="none" stroke="#5C2B42" stroke-width="2.2" />
+          <circle cx="75" cy="60" r="11" fill="none" stroke="#5C2B42" stroke-width="2.2" />
+          <line x1="56" y1="60" x2="64" y2="60" stroke="#5C2B42" stroke-width="2.2" />
+        `;
+      }
+
+      return `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="${size}" height="${size}">
+          <!-- Cute Outfit Shoulders -->
+          <path d="M34 114 C34 94, 86 94, 86 114 Z" fill="#FF94B8" />
+          <path d="M48 96 L60 108 L72 96 Z" fill="#FFFFFF" />
+          ${backHair}
+          <!-- Chibi Head -->
+          <rect x="31" y="30" width="58" height="56" rx="28" fill="${skinColor}" />
+          <!-- Rosy Blush -->
+          <ellipse cx="40" cy="68" rx="6" ry="3.2" fill="#FF758F" opacity="0.55" />
+          <ellipse cx="80" cy="68" rx="6" ry="3.2" fill="#FF758F" opacity="0.55" />
+          <!-- Sparkly Anime Eyes -->
+          <ellipse cx="45" cy="60" rx="5.5" ry="7" fill="${eyeColor}" />
+          <circle cx="43.5" cy="57.5" r="2.2" fill="#FFFFFF" />
+          <circle cx="46.5" cy="62.5" r="1.1" fill="#FFFFFF" />
+          <ellipse cx="75" cy="60" rx="5.5" ry="7" fill="${eyeColor}" />
+          <circle cx="73.5" cy="57.5" r="2.2" fill="#FFFFFF" />
+          <circle cx="76.5" cy="62.5" r="1.1" fill="#FFFFFF" />
+          <!-- Cat Smile -->
+          <path d="M54 72 Q57 76 60 72 Q63 76 66 72" fill="none" stroke="#5C2B42" stroke-width="2.2" stroke-linecap="round" />
+          ${frontHair}
+          ${accSVG}
+        </svg>
+      `;
+    }
+
+    function getCharacterAvatarHTML(char, sizeClass = 'w-20 h-20') {
+      if (char.avatarMode === 'upload' && char.uploadedImage) {
+        return `<img src="${char.uploadedImage}" alt="${char.name}" class="${sizeClass} rounded-2xl object-cover border-2 border-sakura-300 bg-white" />`;
+      }
+      return `<div class="${sizeClass} rounded-2xl bg-sakura-50 border-2 border-sakura-200 flex items-center justify-center overflow-hidden shrink-0">${generateChibiSVG(char.chibi, 84)}</div>`;
+    }
+
+    // =========================================================
+    // TAB 2: CHARACTER CREATOR RENDER & MODAL
+    // =========================================================
+    function renderCharacters() {
+      const grid = document.getElementById('character-grid');
+      if (!project.characters.length) {
+        grid.innerHTML = `
+          <div class="col-span-full kawaii-card p-10 text-center space-y-3">
+            <div class="text-4xl">🎀</div>
+            <h3 class="text-lg font-bold text-pink-950">No Characters Yet!</h3>
+            <p class="text-sm text-pink-800/75">Click "Create New Character" to design your protagonist and cast.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = project.characters.map(char => `
+        <div class="kawaii-card p-5 flex flex-col justify-between gap-4 hover:border-sakura-400 transition-all">
+          <div>
+            <div class="flex items-start gap-4">
+              ${getCharacterAvatarHTML(char, 'w-20 h-20')}
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full shrink-0" style="background:${char.color}"></span>
+                  <h3 class="font-display font-bold text-lg text-pink-950 truncate">${char.name}</h3>
+                </div>
+                <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-sakura-100 text-sakura-700 border border-sakura-200">
+                  ${char.role}
+                </span>
+                <p class="text-xs font-bold text-pink-700/80 mt-2">✨ ${char.traits || 'No traits listed'}</p>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-sakura-100 space-y-2 text-xs text-pink-900/85">
+              ${char.appearance ? `<p><b class="text-sakura-700">Look:</b> ${char.appearance}</p>` : ''}
+              ${char.bio ? `<p><b class="text-sakura-700">Story:</b> ${char.bio}</p>` : ''}
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-2 pt-2 border-t border-sakura-100">
+            <button onclick="openCharacterModal('${char.id}')" class="px-3 py-1.5 rounded-xl bg-sakura-100 hover:bg-sakura-200 text-sakura-700 font-bold text-xs">
+              ✏️ Edit
+            </button>
+            <button onclick="deleteCharacter('${char.id}')" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs">
+              🗑️ Delete
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCharacterModal(charId = null) {
+      const modal = document.getElementById('character-modal');
+      modal.classList.remove('hidden');
+
+      if (charId) {
+        const char = project.characters.find(c => c.id === charId);
+        document.getElementById('char-modal-title').textContent = `✏️ Edit ${char.name}`;
+        document.getElementById('char-id').value = char.id;
+        document.getElementById('char-name').value = char.name;
+        document.getElementById('char-role').value = char.role;
+        document.getElementById('char-traits').value = char.traits;
+        document.getElementById('char-color').value = char.color;
+        document.getElementById('char-appearance').value = char.appearance;
+        document.getElementById('char-bio').value = char.bio;
+
+        modalAvatarMode = char.avatarMode || 'chibi';
+        modalUploadedImage = char.uploadedImage || '';
+        document.getElementById('chibi-hair-style').value = char.chibi?.hairStyle || 'twintails';
+        document.getElementById('chibi-accessory').value = char.chibi?.accessory || 'bow';
+        document.getElementById('chibi-hair-color').value = char.chibi?.hairColor || '#FF85A2';
+        document.getElementById('chibi-eye-color').value = char.chibi?.eyeColor || '#9D4EDD';
+        document.getElementById('chibi-skin-color').value = char.chibi?.skinColor || '#FFE5D9';
+      } else {
+        document.getElementById('char-modal-title').textContent = '🎀 Create New Character';
+        document.getElementById('character-form').reset();
+        document.getElementById('char-id').value = '';
+        modalAvatarMode = 'chibi';
+        modalUploadedImage = '';
+      }
+      setAvatarMode(modalAvatarMode);
+    }
+
+    function closeCharacterModal() {
+      document.getElementById('character-modal').classList.add('hidden');
+    }
+
+    function setAvatarMode(mode) {
+      modalAvatarMode = mode;
+      const controls = document.getElementById('chibi-controls');
+      const chibiBtn = document.getElementById('btn-mode-chibi');
+      if (mode === 'chibi') {
+        controls.classList.remove('opacity-40', 'pointer-events-none');
+        chibiBtn.classList.add('bg-sakura-500', 'text-white');
+        chibiBtn.classList.remove('bg-white', 'text-sakura-700');
+      } else {
+        controls.classList.add('opacity-40', 'pointer-events-none');
+        chibiBtn.classList.remove('bg-sakura-500', 'text-white');
+        chibiBtn.classList.add('bg-white', 'text-sakura-700');
+      }
+      refreshChibiPreview();
+    }
+
+    function refreshChibiPreview() {
+      const box = document.getElementById('chibi-preview-box');
+      if (modalAvatarMode === 'upload' && modalUploadedImage) {
+        box.innerHTML = `<img src="${modalUploadedImage}" class="w-full h-full object-cover" />`;
+        return;
+      }
+      const chibiData = {
+        hairStyle: document.getElementById('chibi-hair-style').value,
+        accessory: document.getElementById('chibi-accessory').value,
+        hairColor: document.getElementById('chibi-hair-color').value,
+        eyeColor: document.getElementById('chibi-eye-color').value,
+        skinColor: document.getElementById('chibi-skin-color').value
+      };
+      box.innerHTML = generateChibiSVG(chibiData, 136);
+    }
+
+    function handleCharacterImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        modalUploadedImage = e.target.result;
+        setAvatarMode('upload');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function saveCharacter(event) {
+      event.preventDefault();
+      const id = document.getElementById('char-id').value;
+      const charPayload = {
+        id: id || 'char_' + Date.now(),
+        name: document.getElementById('char-name').value.trim(),
+        role: document.getElementById('char-role').value,
+        traits: document.getElementById('char-traits').value.trim(),
+        color: document.getElementById('char-color').value,
+        appearance: document.getElementById('char-appearance').value.trim(),
+        bio: document.getElementById('char-bio').value.trim(),
+        avatarMode: modalAvatarMode,
+        uploadedImage: modalUploadedImage,
+        chibi: {
+          hairStyle: document.getElementById('chibi-hair-style').value,
+          accessory: document.getElementById('chibi-accessory').value,
+          hairColor: document.getElementById('chibi-hair-color').value,
+          eyeColor: document.getElementById('chibi-eye-color').value,
+          skinColor: document.getElementById('chibi-skin-color').value
+        }
+      };
+
+      if (id) {
+        const idx = project.characters.findIndex(c => c.id === id);
+        if (idx > -1) project.characters[idx] = charPayload;
+        showToast(`Updated ${charPayload.name}!`);
+      } else {
+        project.characters.push(charPayload);
+        showToast(`Welcome ${charPayload.name} to the cast!`);
+      }
+
+      saveProject();
+      renderCharacters();
+      renderDashboard();
+      closeCharacterModal();
+    }
+
+    function deleteCharacter(id) {
+      project.characters = project.characters.filter(c => c.id !== id);
+      project.cover.featuredCharIds = project.cover.featuredCharIds.filter(cid => cid !== id);
+      saveProject();
+      renderCharacters();
+      renderDashboard();
+      showToast('Character removed from cast.');
+    }
+
+    // =========================================================
+    // TAB 3: EPISODE ORGANIZER (KANBAN BOARD)
+    // =========================================================
+    function renderKanbanBoard() {
+      const board = document.getElementById('kanban-board');
+      const sortedEps = [...project.episodes].sort((a, b) => a.number - b.number);
+
+      board.innerHTML = KANBAN_STAGES.map(stage => {
+        const stageEps = sortedEps.filter(ep => ep.status === stage.id);
+        return `
+          <div class="kawaii-card p-3.5 flex flex-col gap-3 min-h-[340px]"
+               ondragover="event.preventDefault()"
+               ondrop="handleEpisodeDrop(event, '${stage.id}')">
+            <div class="flex items-center justify-between px-2.5 py-2 rounded-xl border ${stage.color}">
+              <span class="font-display font-bold text-xs flex items-center gap-1.5">
+                <span>${stage.emoji}</span>
+                <span>${stage.id}</span>
+              </span>
+              <span class="text-xs font-extrabold px-2 py-0.5 rounded-full bg-white/80">${stageEps.length}</span>
+            </div>
+
+            <div class="space-y-2.5 flex-1">
+              ${stageEps.map(ep => {
+                const panelCount = (project.scripts[ep.id] || []).length;
+                return `
+                  <div draggable="true"
+                       ondragstart="handleEpisodeDragStart(event, '${ep.id}')"
+                       class="p-3.5 rounded-2xl bg-white border-2 border-sakura-200 hover:border-sakura-400 shadow-sm cursor-grab active:cursor-grabbing space-y-2 transition-all">
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="px-2 py-0.5 rounded-lg bg-sakura-500 text-white text-[10px] font-extrabold">EP. ${ep.number}</span>
+                      <div class="flex items-center gap-1">
+                        <button onclick="jumpToEpisodeScript('${ep.id}')" class="text-[11px] px-2 py-0.5 rounded-lg bg-sakura-100 text-sakura-700 font-bold hover:bg-sakura-200" title="Write Script">✍️</button>
+                        <button onclick="openEpisodeModal('${ep.id}')" class="text-[11px] px-2 py-0.5 rounded-lg bg-sakura-50 text-pink-800 font-bold hover:bg-sakura-100" title="Edit">⚙️</button>
+                      </div>
+                    </div>
+
+                    <h4 class="font-display font-bold text-sm text-pink-950 leading-snug">${ep.title}</h4>
+                    <p class="text-xs text-pink-800/75 line-clamp-2">${ep.summary || 'No summary added yet.'}</p>
+
+                    <div class="pt-2 border-t border-sakura-100 flex items-center justify-between text-[11px] font-bold text-pink-700">
+                      <span>🖼️ ${panelCount}/${ep.goal} panels</span>
+                      <select onchange="moveEpisodeStatus('${ep.id}', this.value)" class="bg-sakura-50 border border-sakura-200 rounded-lg px-1.5 py-0.5 text-[10px] font-bold focus:outline-none">
+                        ${KANBAN_STAGES.map(s => `<option value="${s.id}" ${s.id === ep.status ? 'selected' : ''}>${s.id}</option>`).join('')}
+                      </select>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+              ${stageEps.length === 0 ? `<div class="h-24 rounded-2xl border-2 border-dashed border-sakura-200 flex items-center justify-center text-xs text-pink-400 font-semibold">Drop episode here ✨</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    let draggedEpisodeId = null;
+    function handleEpisodeDragStart(event, epId) {
+      draggedEpisodeId = epId;
+    }
+    function handleEpisodeDrop(event, newStatus) {
+      event.preventDefault();
+      if (!draggedEpisodeId) return;
+      moveEpisodeStatus(draggedEpisodeId, newStatus);
+      draggedEpisodeId = null;
+    }
+
+    function moveEpisodeStatus(epId, newStatus) {
+      const ep = project.episodes.find(e => e.id === epId);
+      if (ep && ep.status !== newStatus) {
+        ep.status = newStatus;
+        saveProject();
+        renderKanbanBoard();
+        renderDashboard();
+        showToast(`Episode ${ep.number} moved to ${newStatus}!`);
+      }
+    }
+
+    function openEpisodeModal(epId = null) {
+      const modal = document.getElementById('episode-modal');
+      modal.classList.remove('hidden');
+
+      if (epId) {
+        const ep = project.episodes.find(e => e.id === epId);
+        document.getElementById('ep-modal-title').textContent = `✏️ Edit Episode ${ep.number}`;
+        document.getElementById('ep-id').value = ep.id;
+        document.getElementById('ep-number').value = ep.number;
+        document.getElementById('ep-title').value = ep.title;
+        document.getElementById('ep-status').value = ep.status;
+        document.getElementById('ep-goal').value = ep.goal;
+        document.getElementById('ep-summary').value = ep.summary;
+      } else {
+        document.getElementById('ep-modal-title').textContent = '✨ Plan New Episode';
+        document.getElementById('ep-id').value = '';
+        const nextNum = project.episodes.length ? Math.max(...project.episodes.map(e => e.number)) + 1 : 1;
+        document.getElementById('ep-number').value = nextNum;
+        document.getElementById('ep-title').value = '';
+        document.getElementById('ep-status').value = 'Ideas';
+        document.getElementById('ep-goal').value = 45;
+        document.getElementById('ep-summary').value = '';
+      }
+    }
+
+    function closeEpisodeModal() {
+      document.getElementById('episode-modal').classList.add('hidden');
+    }
+
+    function saveEpisode(event) {
+      event.preventDefault();
+      const id = document.getElementById('ep-id').value;
+      const payload = {
+        id: id || 'ep_' + Date.now(),
+        number: parseInt(document.getElementById('ep-number').value, 10),
+        title: document.getElementById('ep-title').value.trim(),
+        status: document.getElementById('ep-status').value,
+        goal: parseInt(document.getElementById('ep-goal').value, 10) || 40,
+        summary: document.getElementById('ep-summary').value.trim()
+      };
+
+      if (id) {
+        const idx = project.episodes.findIndex(e => e.id === id);
+        if (idx > -1) project.episodes[idx] = payload;
+        showToast(`Updated Episode ${payload.number}!`);
+      } else {
+        project.episodes.push(payload);
+        if (!project.scripts[payload.id]) {
+          project.scripts[payload.id] = [];
+        }
+        showToast(`Added Episode ${payload.number}!`);
+      }
+
+      saveProject();
+      renderKanbanBoard();
+      renderDashboard();
+      closeEpisodeModal();
+    }
+
+    function jumpToEpisodeScript(epId) {
+      activeScriptEpisodeId = epId;
+      switchTab('script');
+    }
+
+    // =========================================================
+    // TAB 4: STORYLINE ARCS & PANEL SCRIPT WRITER
+    // =========================================================
+    function renderScriptWorkspace() {
+      // 1. Render Story Arcs
+      const arcsContainer = document.getElementById('story-arcs-list');
+      arcsContainer.innerHTML = project.arcs.map((arc, i) => `
+        <div class="p-4 rounded-2xl bg-sakura-50 border-2 border-sakura-200 space-y-2 relative group">
+          <div class="flex items-center justify-between gap-2">
+            <input type="text" value="${arc.title}" onchange="updateStoryArc('${arc.id}', 'title', this.value)"
+              class="font-display font-bold text-sm text-sakura-700 bg-transparent border-b border-transparent focus:border-sakura-500 focus:outline-none w-full" />
+            <button onclick="deleteStoryArc('${arc.id}')" class="text-xs text-rose-400 hover:text-rose-600 font-bold">✕</button>
+          </div>
+          <input type="text" value="${arc.episodesRange}" onchange="updateStoryArc('${arc.id}', 'episodesRange', this.value)"
+            class="text-[11px] font-extrabold text-pink-600 bg-white px-2.5 py-0.5 rounded-full border border-sakura-200 w-28 focus:outline-none" />
+          <textarea rows="2" onchange="updateStoryArc('${arc.id}', 'summary', this.value)"
+            class="w-full text-xs text-pink-900/80 bg-transparent resize-none focus:outline-none">${arc.summary}</textarea>
+        </div>
+      `).join('');
+
+      // 2. Populate Episode Selector
+      const select = document.getElementById('script-episode-select');
+      const sortedEps = [...project.episodes].sort((a, b) => a.number - b.number);
+      if (!sortedEps.find(e => e.id === activeScriptEpisodeId) && sortedEps.length) {
+        activeScriptEpisodeId = sortedEps[0].id;
+      }
+
+      select.innerHTML = sortedEps.map(ep => `
+        <option value="${ep.id}" ${ep.id === activeScriptEpisodeId ? 'selected' : ''}>
+          Ep. ${ep.number}: ${ep.title}
+        </option>
+      `).join('');
+
+      renderScriptPanelsAndPreview();
+    }
+
+    function addStoryArc() {
+      project.arcs.push({
+        id: 'arc_' + Date.now(),
+        title: `Arc ${project.arcs.length + 1}: New Romantic Twist`,
+        episodesRange: 'Eps TBD',
+        summary: 'Describe the main emotional stakes and turning point of this arc...'
+      });
+      saveProject();
+      renderScriptWorkspace();
+      showToast('Added new story arc!');
+    }
+
+    function updateStoryArc(id, field, val) {
+      const arc = project.arcs.find(a => a.id === id);
+      if (arc) {
+        arc[field] = val;
+        saveProject();
+      }
+    }
+
+    function deleteStoryArc(id) {
+      project.arcs = project.arcs.filter(a => a.id !== id);
+      saveProject();
+      renderScriptWorkspace();
+    }
+
+    function selectScriptEpisode(epId) {
+      activeScriptEpisodeId = epId;
+      renderScriptPanelsAndPreview();
+    }
+
+    function addScriptPanel() {
+      if (!project.scripts[activeScriptEpisodeId]) {
+        project.scripts[activeScriptEpisodeId] = [];
+      }
+      project.scripts[activeScriptEpisodeId].push({
+        id: 'pan_' + Date.now(),
+        camera: 'Medium Shot',
+        visual: '',
+        characterId: project.characters[0]?.id || '',
+        bubbleType: 'speech',
+        dialogue: '',
+        sfx: ''
+      });
+      saveProject();
+      renderScriptPanelsAndPreview();
+      renderDashboard();
+    }
+
+    function updateScriptPanel(panelId, field, value) {
+      const panels = project.scripts[activeScriptEpisodeId] || [];
+      const panel = panels.find(p => p.id === panelId);
+      if (panel) {
+        panel[field] = value;
+        saveProject();
+        renderVerticalWebtoonPreview();
+      }
+    }
+
+    function deleteScriptPanel(panelId) {
+      project.scripts[activeScriptEpisodeId] = (project.scripts[activeScriptEpisodeId] || []).filter(p => p.id !== panelId);
+      saveProject();
+      renderScriptPanelsAndPreview();
+      renderDashboard();
+    }
+
+    function renderScriptPanelsAndPreview() {
+      const panels = project.scripts[activeScriptEpisodeId] || [];
+      const container = document.getElementById('script-panels-container');
+
+      if (!panels.length) {
+        container.innerHTML = `
+          <div class="p-8 rounded-2xl bg-sakura-50 border-2 border-dashed border-sakura-300 text-center space-y-2">
+            <div class="text-3xl">📝</div>
+            <p class="font-bold text-pink-950 text-sm">This episode has no scripted panels yet!</p>
+            <button onclick="addScriptPanel()" class="px-4 py-2 rounded-xl bg-sakura-500 text-white text-xs font-bold">+ Add First Panel</button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = panels.map((panel, index) => `
+          <div class="p-4 rounded-2xl bg-sakura-50/70 border-2 border-sakura-200 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-1 rounded-xl bg-sakura-500 text-white font-display font-bold text-xs">Panel #${index + 1}</span>
+                <select onchange="updateScriptPanel('${panel.id}', 'camera', this.value)" class="px-2.5 py-1 rounded-xl bg-white border border-sakura-200 text-xs font-bold text-pink-900">
+                  ${['Wide Establishing Shot', 'Medium Shot', 'Close-Up', 'Dramatic Low Angle', 'Chibi Reaction Shot', 'Vertical Pan / Scenery'].map(cam =>
+                    `<option value="${cam}" ${panel.camera === cam ? 'selected' : ''}>🎥 ${cam}</option>`
+                  ).join('')}
+                </select>
+              </div>
+              <button onclick="deleteScriptPanel('${panel.id}')" class="text-xs font-bold text-rose-500 hover:text-rose-700 px-2 py-1">Remove</button>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-extrabold uppercase text-pink-800/80 mb-1">Visual Action & Background</label>
+              <textarea rows="2" oninput="updateScriptPanel('${panel.id}', 'visual', this.value)" placeholder="Describe pose, lighting, sakura petals, expressions..."
+                class="w-full px-3 py-2 rounded-xl bg-white border border-sakura-200 focus:border-sakura-500 focus:outline-none text-xs text-pink-950">${panel.visual}</textarea>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-extrabold uppercase text-pink-800/80 mb-1">Speaker</label>
+                <select onchange="updateScriptPanel('${panel.id}', 'characterId', this.value)" class="w-full px-2.5 py-1.5 rounded-xl bg-white border border-sakura-200 text-xs font-bold">
+                  <option value="">✨ Narrator / None</option>
+                  ${project.characters.map(c => `<option value="${c.id}" ${panel.characterId === c.id ? 'selected' : ''}>${c.name}</option>`).join('')}
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-extrabold uppercase text-pink-800/80 mb-1">Bubble Style</label>
+                <select onchange="updateScriptPanel('${panel.id}', 'bubbleType', this.value)" class="w-full px-2.5 py-1.5 rounded-xl bg-white border border-sakura-200 text-xs font-bold">
+                  <option value="speech" ${panel.bubbleType === 'speech' ? 'selected' : ''}>💬 Speech Bubble</option>
+                  <option value="thought" ${panel.bubbleType === 'thought' ? 'selected' : ''}>☁️ Thought Cloud</option>
+                  <option value="shout" ${panel.bubbleType === 'shout' ? 'selected' : ''}>💥 Shout / Exclaim</option>
+                  <option value="narration" ${panel.bubbleType === 'narration' ? 'selected' : ''}>📖 Narration Box</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-extrabold uppercase text-pink-800/80 mb-1">SFX / Sound</label>
+                <input type="text" value="${panel.sfx || ''}" oninput="updateScriptPanel('${panel.id}', 'sfx', this.value)" placeholder="e.g., DOKI DOKI 💓"
+                  class="w-full px-2.5 py-1.5 rounded-xl bg-white border border-sakura-200 text-xs font-comic font-bold text-sakura-600" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-extrabold uppercase text-pink-800/80 mb-1">Dialogue Text</label>
+              <input type="text" value="${panel.dialogue || ''}" oninput="updateScriptPanel('${panel.id}', 'dialogue', this.value)" placeholder="What does the character say?"
+                class="w-full px-3 py-2 rounded-xl bg-white border border-sakura-200 focus:border-sakura-500 focus:outline-none text-xs font-bold text-pink-950" />
+            </div>
+          </div>
+        `).join('');
+      }
+
+      renderVerticalWebtoonPreview();
+    }
+
+    function renderVerticalWebtoonPreview() {
+      const ep = project.episodes.find(e => e.id === activeScriptEpisodeId);
+      document.getElementById('preview-ep-header').textContent = ep ? `Ep. ${ep.number}: ${ep.title}` : 'Preview';
+
+      const panels = project.scripts[activeScriptEpisodeId] || [];
+      const previewBox = document.getElementById('webtoon-vertical-preview');
+
+      if (!panels.length) {
+        previewBox.innerHTML = `<div class="h-full flex items-center justify-center text-center text-xs text-pink-400 font-bold px-6">Add panels on the left to watch your vertical Webtoon scroll come alive! 🌸</div>`;
+        return;
+      }
+
+      previewBox.innerHTML = panels.map((panel, idx) => {
+        const speaker = project.characters.find(c => c.id === panel.characterId);
+        const bubbleClass = `bubble-${panel.bubbleType || 'speech'}`;
+
+        return `
+          <div class="space-y-3">
+            <!-- Vertical Comic Frame -->
+            <div class="rounded-2xl border-2 border-pink-950 bg-gradient-to-b from-sakura-100/80 via-white to-sakura-50 p-3.5 shadow-sm relative overflow-hidden">
+              <div class="flex items-center justify-between text-[10px] font-extrabold text-sakura-600 mb-2">
+                <span>PANEL ${idx + 1}</span>
+                <span>${panel.camera}</span>
+              </div>
+
+              <p class="text-xs italic text-pink-900/80 leading-relaxed mb-3">
+                ${panel.visual || 'Scene artwork goes here...'}
+              </p>
+
+              ${panel.sfx ? `
+                <div class="text-right font-comic font-bold text-sm text-sakura-600 tracking-wider mb-2 drop-shadow-sm">
+                  ${panel.sfx}
+                </div>
+              ` : ''}
+
+              ${panel.dialogue ? `
+                <div class="${bubbleClass} mt-1">
+                  ${speaker ? `
+                    <div class="flex items-center gap-1.5 mb-1">
+                      <span class="w-2.5 h-2.5 rounded-full" style="background:${speaker.color}"></span>
+                      <span class="text-[10px] font-extrabold uppercase tracking-wider" style="color:${speaker.color}">${speaker.name}</span>
+                    </div>
+                  ` : ''}
+                  <p class="font-comic font-bold text-xs sm:text-sm text-pink-950 leading-snug">
+                    ${panel.dialogue}
+                  </p>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Webtoon Vertical Gutter Spacing -->
+            <div class="flex justify-center">
+              <span class="text-[10px] text-sakura-300">• • •</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // =========================================================
+    // TAB 5: FICTIONAL COVER DESIGNER (HTML5 CANVAS)
+    // =========================================================
+    function renderCoverDesignerControls() {
+      const { cover } = project;
+      document.getElementById('cover-title-input').value = cover.title;
+      document.getElementById('cover-subtitle-input').value = cover.subtitle;
+      document.getElementById('cover-title-color').value = cover.titleColor;
+      document.getElementById('cover-outline-color').value = cover.outlineColor;
+      document.getElementById('cover-title-pos').value = cover.titlePos;
+
+      // Backdrop presets
+      document.getElementById('cover-bg-presets').innerHTML = COVER_BACKDROPS.map(bg => {
+        const active = cover.backdropId === bg.id;
+        return `
+          <button type="button" onclick="selectCoverBackdrop('${bg.id}')"
+            class="p-2 rounded-xl border-2 text-center transition-all ${active ? 'border-sakura-600 scale-105 shadow-sm' : 'border-sakura-200'}">
+            <div class="w-full h-7 rounded-lg mb-1" style="background: linear-gradient(135deg, ${bg.colors[0]}, ${bg.colors[1]})"></div>
+            <span class="text-[10px] font-bold text-pink-950 block truncate">${bg.name}</span>
+          </button>
+        `;
+      }).join('');
+
+      // Character toggles
+      document.getElementById('cover-char-toggles').innerHTML = project.characters.map(c => {
+        const active = cover.featuredCharIds.includes(c.id);
+        return `
+          <button type="button" onclick="toggleCoverCharacter('${c.id}')"
+            class="px-3 py-1.5 rounded-xl text-xs font-extrabold border-2 transition-all flex items-center gap-1.5 ${
+              active ? 'bg-sakura-500 text-white border-sakura-600' : 'bg-sakura-50 text-pink-900 border-sakura-200'
+            }">
+            <span>${active ? '💖' : '🤍'}</span>
+            <span>${c.name}</span>
+          </button>
+        `;
+      }).join('');
+
+      // Badges state
+      ['ORIGINAL', 'UP', 'NEW'].forEach(badge => {
+        const btn = document.getElementById(`badge-btn-${badge}`);
+        const active = cover.badges.includes(badge);
+        btn.className = `px-3 py-1.5 rounded-xl text-xs font-extrabold border-2 transition-all ${
+          active ? 'bg-pink-950 text-white border-pink-950 shadow-sm' : 'bg-white text-pink-900 border-sakura-200'
+        }`;
+      });
+
+      // Stickers
+      document.getElementById('cover-sticker-toggles').innerHTML = COVER_STICKERS.map(st => {
+        const active = cover.stickers.includes(st.id);
+        return `
+          <button type="button" onclick="toggleCoverSticker('${st.id}')"
+            class="px-2.5 py-1 rounded-xl text-xs font-bold border transition-all ${
+              active ? 'bg-sakura-500 text-white border-sakura-600' : 'bg-sakura-50 text-pink-900 border-sakura-200'
+            }">
+            ${st.label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function updateCoverState() {
+      project.cover.title = document.getElementById('cover-title-input').value;
+      project.cover.subtitle = document.getElementById('cover-subtitle-input').value;
+      project.cover.titleColor = document.getElementById('cover-title-color').value;
+      project.cover.outlineColor = document.getElementById('cover-outline-color').value;
+      project.cover.titlePos = document.getElementById('cover-title-pos').value;
+      saveProject();
+      drawCoverCanvas();
+    }
+
+    function selectCoverBackdrop(id) {
+      project.cover.backdropId = id;
+      saveProject();
+      renderCoverDesignerControls();
+      drawCoverCanvas();
+    }
+
+    function toggleCoverCharacter(charId) {
+      const list = project.cover.featuredCharIds;
+      const idx = list.indexOf(charId);
+      if (idx > -1) list.splice(idx, 1);
+      else list.push(charId);
+      saveProject();
+      renderCoverDesignerControls();
+      drawCoverCanvas();
+    }
+
+    function toggleCoverBadge(badge) {
+      const list = project.cover.badges;
+      const idx = list.indexOf(badge);
+      if (idx > -1) list.splice(idx, 1);
+      else list.push(badge);
+      saveProject();
+      renderCoverDesignerControls();
+      drawCoverCanvas();
+    }
+
+    function toggleCoverSticker(stickerId) {
+      const list = project.cover.stickers;
+      const idx = list.indexOf(stickerId);
+      if (idx > -1) list.splice(idx, 1);
+      else list.push(stickerId);
+      saveProject();
+      renderCoverDesignerControls();
+      drawCoverCanvas();
+    }
+
+    function drawCoverCanvas() {
+      const canvas = document.getElementById('cover-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+      const { cover } = project;
+
+      // 1. Background Gradient
+      const preset = COVER_BACKDROPS.find(b => b.id === cover.backdropId) || COVER_BACKDROPS[0];
+      const grad = ctx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, preset.colors[0]);
+      grad.addColorStop(1, preset.colors[1]);
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Soft decorative white halo circle behind cast
+      ctx.save();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.beginPath();
+      ctx.arc(W / 2, H * 0.44, 210, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+      ctx.lineWidth = 6;
+      ctx.setLineDash([14, 10]);
+      ctx.stroke();
+      ctx.restore();
+
+      // 2. Render Featured Characters (Chibi SVG -> Image or Uploaded Image)
+      const featuredChars = project.characters.filter(c => cover.featuredCharIds.includes(c.id)).slice(0, 3);
+      const charPromises = featuredChars.map(char => {
+        return new Promise(resolve => {
+          const img = new Image();
+          img.onload = () => resolve({ img, char });
+          img.onerror = () => resolve(null);
+          if (char.avatarMode === 'upload' && char.uploadedImage) {
+            img.src = char.uploadedImage;
+          } else {
+            const svgStr = generateChibiSVG(char.chibi, 280);
+            img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
+          }
+        });
+      });
+
+      Promise.all(charPromises).then(loaded => {
+        const valid = loaded.filter(Boolean);
+        const count = valid.length;
+        valid.forEach((item, idx) => {
+          const charSize = count === 1 ? 330 : count === 2 ? 265 : 215;
+          const totalWidth = count * (charSize * 0.78);
+          const startX = (W - totalWidth) / 2 - 20;
+          const x = startX + idx * (charSize * 0.78);
+          const y = H * 0.25 + (idx % 2 === 1 ? 20 : 0);
+
+          ctx.save();
+          ctx.shadowColor = 'rgba(92, 43, 66, 0.25)';
+          ctx.shadowBlur = 18;
+          ctx.shadowOffsetY = 8;
+          ctx.drawImage(item.img, x, y, charSize, charSize);
+          ctx.restore();
+        });
+
+        // 3. Stickers Layer
+        ctx.save();
+        ctx.font = '38px sans-serif';
+        if (cover.stickers.includes('sparkles')) {
+          ctx.fillText('✨', 55, 175);
+          ctx.fillText('✨', W - 95, 210);
+          ctx.fillText('✨', 80, H - 240);
+        }
+        if (cover.stickers.includes('hearts')) {
+          ctx.fillText('💖', W - 110, 145);
+          ctx.fillText('💕', 50, 290);
+          ctx.fillText('💗', W - 90, H - 260);
+        }
+        if (cover.stickers.includes('petals')) {
+          ctx.fillText('🌸', 45, 115);
+          ctx.fillText('🌸', W - 85, 320);
+          ctx.fillText('🌸', 110, H - 290);
+        }
+        if (cover.stickers.includes('stars')) {
+          ctx.fillText('⭐', W - 130, 260);
+          ctx.fillText('🌟', 70, 225);
+        }
+        ctx.restore();
+
+        // 4. Webtoon Platform Badges (Top-Left)
+        let badgeX = 28;
+        const badgeY = 28;
+        cover.badges.forEach(badge => {
+          ctx.save();
+          let bg = '#00D564';
+          let fg = '#FFFFFF';
+          if (badge === 'UP') { bg = '#FF1493'; }
+          if (badge === 'NEW') { bg = '#FFD166'; fg = '#5C2B42'; }
+
+          const bw = badge === 'ORIGINAL' ? 136 : 74;
+          ctx.fillStyle = bg;
+          roundRect(ctx, badgeX, badgeY, bw, 38, 12);
+          ctx.fill();
+
+          ctx.fillStyle = fg;
+          ctx.font = '800 18px Fredoka, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(badge, badgeX + bw / 2, badgeY + 20);
+          ctx.restore();
+          badgeX += bw + 10;
+        });
+
+        // 5. Bottom Vignette for Title Readability
+        if (cover.titlePos === 'bottom') {
+          const vig = ctx.createLinearGradient(0, H * 0.58, 0, H);
+          vig.addColorStop(0, 'rgba(58, 29, 44, 0)');
+          vig.addColorStop(1, 'rgba(58, 29, 44, 0.72)');
+          ctx.fillStyle = vig;
+          ctx.fillRect(0, H * 0.58, W, H * 0.42);
+        }
+
+        // 6. Title & Subtitle Typography
+        const titleY = cover.titlePos === 'top' ? 130 : cover.titlePos === 'center' ? H * 0.52 : H - 155;
+        drawWrappedCoverTitle(ctx, cover.title || 'Untitled Webtoon', W / 2, titleY, W - 70, 48, cover.titleColor, cover.outlineColor);
+
+        // Subtitle Pill
+        if (cover.subtitle) {
+          ctx.save();
+          ctx.font = '700 21px Nunito, sans-serif';
+          const textW = ctx.measureText(cover.subtitle).width + 36;
+          const subY = cover.titlePos === 'top' ? 235 : H - 52;
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+          roundRect(ctx, (W - textW) / 2, subY - 18, textW, 36, 18);
+          ctx.fill();
+
+          ctx.fillStyle = '#D81B60';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(cover.subtitle, W / 2, subY + 1);
+          ctx.restore();
+        }
+
+        // Sync mini shelf thumbnail preview
+        const shelfImg = document.getElementById('shelf-preview-img');
+        const shelfTitle = document.getElementById('shelf-preview-title');
+        if (shelfImg) shelfImg.src = canvas.toDataURL('image/png');
+        if (shelfTitle) shelfTitle.textContent = cover.title || 'Your Series';
+      });
+    }
+
+    function drawWrappedCoverTitle(ctx, text, x, startY, maxWidth, lineHeight, fillColor, strokeColor) {
+      ctx.save();
+      ctx.font = '700 42px Fredoka, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = 10;
+      ctx.strokeStyle = strokeColor;
+      ctx.fillStyle = fillColor;
+
+      const words = text.split(' ');
+      const lines = [];
+      let currentLine = words[0] || '';
+
+      for (let i = 1; i < words.length; i++) {
+        const testLine = currentLine + ' ' + words[i];
+        if (ctx.measureText(testLine).width < maxWidth) {
+          currentLine = testLine;
+        } else {
+          lines.push(currentLine);
+          currentLine = words[i];
+        }
+      }
+      lines.push(currentLine);
+
+      lines.slice(0, 3).forEach((line, idx) => {
+        const y = startY + idx * lineHeight;
+        ctx.strokeText(line, x, y);
+        ctx.fillText(line, x, y);
+      });
+      ctx.restore();
+    }
+
+    function roundRect(ctx, x, y, width, height, radius) {
+      ctx.beginPath();
+      ctx.moveTo(x + radius, y);
+      ctx.lineTo(x + width - radius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+      ctx.lineTo(x + width, y + height - radius);
+      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+      ctx.lineTo(x + radius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+      ctx.lineTo(x, y + radius);
+      ctx.quadraticCurveTo(x, y, x + radius, y);
+      ctx.closePath();
+    }
+
+    function downloadCoverPNG() {
+      const canvas = document.getElementById('cover-canvas');
+      const link = document.createElement('a');
+      const safeName = (project.cover.title || 'webtoon-cover').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      link.download = `${safeName}-cover.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('Cover PNG downloaded! 🎨');
+    }
+
+    // =========================================================
+    // EXPORT / IMPORT / RESET JSON BACKUP
+    // =========================================================
+    function exportProjectJSON() {
+      const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const slug = (project.meta.title || 'pinktoon-project').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      a.href = url;
+      a.download = `${slug}-backup.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Exported Webtoon JSON backup!');
+    }
+
+    function importProjectJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (!parsed.meta || !Array.isArray(parsed.characters)) {
+            throw new Error('Invalid Pinktoon project file');
+          }
+          project = parsed;
+          saveProject();
+          initApp();
+          showToast('Project imported successfully! 🌸');
+        } catch (err) {
+          showToast('Invalid JSON project file.', 'error');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function openResetModal() {
+      document.getElementById('reset-modal').classList.remove('hidden');
+    }
+    function closeResetModal() {
+      document.getElementById('reset-modal').classList.add('hidden');
+    }
+    function confirmResetProject() {
+      project = getDefaultProject();
+      activeScriptEpisodeId = project.episodes[0].id;
+      saveProject();
+      initApp();
+      closeResetModal();
+      showToast('Restored "Cherry Blossom Café & The Demon Prince"!');
+    }
+
+    // =========================================================
+    // INITIALIZE APPLICATION
+    // =========================================================
+    function initApp() {
+      lucide.createIcons();
+      renderDashboard();
+      renderCharacters();
+      renderKanbanBoard();
+      renderScriptWorkspace();
+      renderCoverDesignerControls();
+      drawCoverCanvas();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initApp();
+      switchTab('dashboard');
+    });
+  </script>
+</body>
+</html>
